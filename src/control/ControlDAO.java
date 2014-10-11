@@ -9,26 +9,21 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ControlDAO {
 
     private Connection connection;
     
-    String inicioDesayuno = "08";
-    String finDesayuno = "10";
-    String inicioAlmuerzo = "12";
-    String finAlmuerzo = "14";
-    String inicioCena = "16";
-    String finCena = "23";
+    String inicioDesayuno = "08:00";
+    String finDesayuno = "10:00";
+    String inicioAlmuerzo = "12:00";
+    String finAlmuerzo = "14:00";
+    String inicioCena = "16:00";
+    String finCena = "18:00";
     String consumible = "false";
 
     public ControlDAO() {
@@ -56,71 +51,15 @@ public class ControlDAO {
         return listado;
     }
     
-    public void entrada() {
-//	    	try {
-//	    	
-//	            Statement statement = connection.createStatement();
-//	            statement.execute("INSERT INTO torniquetes (entrada,salida) VALUE (1,0)");
-//	           
-//	        } catch (SQLException e) {
-//	            e.printStackTrace();
-//	        }
-    }
-
-    public void salida() {
-//	    	try {
-//	    	
-//	            Statement statement = connection.createStatement();
-//	            statement.execute("INSERT INTO torniquetes (entrada,salida) VALUE (0,1)");
-//	           
-//	        } catch (SQLException e) {
-//	            e.printStackTrace();
-//	        }
-    }
-
-    public int contarEntrada() {
-//	    	int cont = 0;
-//	        try {
-//	            Statement statement = connection.createStatement();
-//	            ResultSet rs = statement.executeQuery("select sum(entrada) from torniquetes");
-//	            if (rs.next()) {
-//	            	cont =  rs.getInt(1);
-//	            }
-//	        } catch (SQLException e) {
-//	            e.printStackTrace();
-//	        }
-//
-//	        return cont;
-        return 1;
-
-    }
-
-    public int contarSalida() {
-        int cont = 0;
-//	        try {
-//	            Statement statement = connection.createStatement();
-//	            ResultSet rs = statement.executeQuery("select sum(salida) from torniquetes");
-//	            if (rs.next()) {
-//	            	cont =  rs.getInt(1);
-//	            }
-//	        } catch (SQLException e) {
-//	            e.printStackTrace();
-//	        }
-
-        return cont;
-
-    }
-
     /**
      * Esta funcion se encarga de dado el codigo de la tarjeta validar si se
      * puede ingresar
-     *
      * @param codigo
+     * @param event_id
      * @return -4 Si la tarjeta no pertenece al evento \n -3 Si la tarjeta no se
      * encuentra en el sistema \n -2 Si la entrada no permite esa categoria de
      * entrada \n -1 Si excedio el limite de entradas \n 0 Si puede entrar
      * normal \n
-     *
      */
     public int validarTarjeta(String codigo, String event_id) {
         String sql = "SELECT id FROM inputs WHERE entr_codigo = " + codigo;
@@ -134,7 +73,7 @@ public class ControlDAO {
                 if (rs.next()) {
                     //ahora tomo los datos de la consulta
                     datos.put("input_id", String.valueOf(rs.getInt("id")));
-
+                    
                     //Determino si esa categoria pertenece a ese evento
                     sql = "SELECT event_id FROM inputs WHERE id = " + datos.get("input_id");
                     rs.close();
@@ -150,7 +89,7 @@ public class ControlDAO {
                                 } else if (resp == 2) {
                                     retornar = 1;
                                     registrarLog(retornar,datos.get("input_id"),statement);
-                                } else if (resp == 2) {
+                                } else if (resp == 3) {
                                     retornar = 0;
                                     registrarLog(retornar,datos.get("input_id"),statement);
                                 } 
@@ -171,47 +110,46 @@ public class ControlDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("Retornar: " + retornar);
+//        System.out.println("Retornar: " + retornar);
         return retornar;
     }
     
     public int consultarReclamados(String input_id) {
         int respuesta = -1;
         Date date = new Date();
-        SimpleDateFormat formateador = new SimpleDateFormat("HH");
+        SimpleDateFormat formateador = new SimpleDateFormat("HH:mm");
         String hora = formateador.format(date);
-        formateador = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        formateador = new SimpleDateFormat("yyyy-MM-dd");
         String fecha = formateador.format(date);
         String inicio;
         String fin;
-        if (Integer.parseInt(hora) >= Integer.parseInt(inicioDesayuno) && Integer.parseInt(hora) <= Integer.parseInt(finDesayuno)) {
-            inicio = fecha + inicioDesayuno + ":00";
-            fin = fecha + finDesayuno + ":00";
+        if (Integer.parseInt(hora.replace(":","")) >= Integer.parseInt(inicioDesayuno.replace(":","")) && Integer.parseInt(hora.replace(":","")) <= Integer.parseInt(finDesayuno.replace(":",""))) {
+            inicio = fecha + " " + inicioDesayuno;
+            fin = fecha + " " + finDesayuno;
             consumible = "REFRIGERIO1";
-        } else if (Integer.parseInt(hora) >= Integer.parseInt(inicioAlmuerzo) && Integer.parseInt(hora) <= Integer.parseInt(finAlmuerzo)) {
-            inicio = fecha + inicioAlmuerzo + ":00";
-            fin = fecha + finAlmuerzo + ":00";
+        } else if (Integer.parseInt(hora.replace(":","")) >= Integer.parseInt(inicioAlmuerzo.replace(":","")) && Integer.parseInt(hora.replace(":","")) <= Integer.parseInt(finAlmuerzo.replace(":",""))) {
+            inicio = fecha + " " + inicioAlmuerzo;
+            fin = fecha + " " + finAlmuerzo;
             consumible = "ALMUERZO";
-        } else if (Integer.parseInt(hora) >= Integer.parseInt(inicioCena) && Integer.parseInt(hora) <= Integer.parseInt(finCena)) {
-            inicio = fecha + inicioCena + ":00";
-            fin = fecha + finCena + ":00";
+        } else if (Integer.parseInt(hora.replace(":","")) >= Integer.parseInt(inicioCena.replace(":","")) && Integer.parseInt(hora.replace(":","")) <= Integer.parseInt(finCena.replace(":",""))) {
+            inicio = fecha + " " + inicioCena;
+            fin = fecha + " " + finCena;
             consumible = "REFRIGERIO2";
         } else {
             return 1;
         }
-        String sql = "SELECT id FROM logs_consumibles WHERE input_id = " + input_id + " AND fecha >= " + inicio + " AND fecha <= " + fin + " LIMIT 0 , 20";
-        System.out.println("sql:" + sql);
+        String sql = "SELECT id FROM logs_consumibles WHERE input_id = " + input_id + " AND fecha >= '" + inicio + "' AND fecha <= '" + fin + "' AND descripcion = '" + consumible + "' LIMIT 0 , 20";
+//        System.out.println("sql:" + sql);
         try {
             Statement statement = connection.createStatement();
             ResultSet rs2 = statement.executeQuery(sql);
             if (rs2 != null) {
                 if (rs2.next()) {
                     respuesta = 2;
-                    System.out.println("log_id: " + rs2.getInt("id"));
-                    rs2.close();
                 } else {
                     respuesta = 3;
                 }
+                rs2.close();
             }
         } catch (SQLException e) {
             e.printStackTrace();
