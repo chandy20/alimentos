@@ -19,10 +19,10 @@ public class ControlDAO {
     private Connection connection;
     
     String inicioDesayuno = "08:00";
-    String finDesayuno = "10:00";
+    String finDesayuno = "11:30";
     String inicioAlmuerzo = "12:00";
-    String finAlmuerzo = "14:00";
-    String inicioCena = "16:00";
+    String finAlmuerzo = "14:30";
+    String inicioCena = "15:00";
     String finCena = "18:00";
     String consumible = "false";
 
