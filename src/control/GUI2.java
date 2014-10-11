@@ -12,7 +12,6 @@ package control;
 import java.awt.Color;
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.Hashtable;
 
 public class GUI2 extends javax.swing.JFrame {
 
@@ -28,7 +27,6 @@ public class GUI2 extends javax.swing.JFrame {
         sw = 0;
         initComponents();
         this.setExtendedState(MAXIMIZED_BOTH);
-//        this.setUndecorated(true);
         createObjects();
         Connection connection = Conexion.getConnection();
         if (connection != null) {
@@ -69,12 +67,14 @@ public class GUI2 extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox();
         jButton1 = new javax.swing.JButton();
         jDesktopPane1 = new javax.swing.JDesktopPane();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+		setUndecorated(true);
         setTitle("CONTROL ALIMENTACION");
         setBackground(new java.awt.Color(255, 255, 255));
         setResizable(false);
@@ -139,6 +139,11 @@ public class GUI2 extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Tw Cen MT", 1, 36)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 0, 153));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 3, 24)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setText("CATERING");
 
         jButton1.setText("SELECCIONAR");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -209,6 +214,10 @@ public class GUI2 extends javax.swing.JFrame {
                     .addGroup(jLayeredPane1Layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
             .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jLayeredPane1Layout.createSequentialGroup()
                     .addComponent(jDesktopPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -234,7 +243,9 @@ public class GUI2 extends javax.swing.JFrame {
                 .addComponent(lblLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(115, 115, 115)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(52, 52, 52))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
             .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jLayeredPane1Layout.createSequentialGroup()
                     .addComponent(jDesktopPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -247,6 +258,7 @@ public class GUI2 extends javax.swing.JFrame {
         jLayeredPane1.setLayer(jLabel5, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(jLabel6, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(jLabel4, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(jLabel7, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(jComboBox1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(jButton1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(jDesktopPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -286,27 +298,27 @@ public class GUI2 extends javax.swing.JFrame {
             switch (resultado) {
                 case 0:
                     lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/good.png")));
-                    jLabel1.setForeground(new Color(163, 209, 121));
-                    jLabel1.setText("BIENVENIDO " + nombre + " PUEDE RECLAMAR CONSUMIBLE");
+                    jLabel1.setForeground(new Color(44, 139, 25));
+                    jLabel1.setText("BIENVENIDO " + nombre);
                     break;
                 case 1:
                     lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bad.png")));
                     jLabel1.setForeground(new Color(191, 61, 39));
-                    jLabel1.setText("CONSUMIBLE RECLAMADO PARA ESTE HORARIO");
+                    jLabel1.setText("CODIGO UTILIZADO");
                     break;
                 case 2:
                     lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/warning2.png")));
                     jLabel1.setForeground(new Color(67, 67, 255));
-                    jLabel1.setText("FUERA DE LA HORA DE ENTREGA DE CONSUMIBLES");
+                    jLabel1.setText("HORARIO FUERA DE RANGO");
                     break;
                 case 3:
                     lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/warning1.png")));
-                    jLabel1.setForeground(new Color(255, 251, 31));
-                    jLabel1.setText("CODIGO NO VALIDO PARA ESTE EVENTO");
+                    jLabel1.setForeground(new Color(234, 144, 1));
+                    jLabel1.setText("EVENTO NO VALIDO");
                     break;
                 case 4:
                     lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/warning1.png")));
-                    jLabel1.setForeground(new Color(255, 251, 31));
+                    jLabel1.setForeground(new Color(234, 144, 1));
                     jLabel1.setText("CODIGO NO VALIDO");
                     break;
             }
@@ -412,6 +424,7 @@ public class GUI2 extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLayeredPane jLayeredPane1;
     public javax.swing.JLabel lblLogo;
     public java.awt.TextField txtCodigo;
