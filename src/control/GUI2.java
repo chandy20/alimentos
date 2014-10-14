@@ -84,6 +84,11 @@ public class GUI2 extends javax.swing.JFrame {
         jLayeredPane1.setPreferredSize(new java.awt.Dimension(1280, 800));
 
         txtCodigo.setForeground(new java.awt.Color(255, 255, 255));
+        txtCodigo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCodigoActionPerformed(evt);
+            }
+        });
         txtCodigo.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtCodigoFocusGained(evt);
@@ -142,8 +147,6 @@ public class GUI2 extends javax.swing.JFrame {
 
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/minimize.png"))); // NOI18N
-        jLabel8.setMaximumSize(new java.awt.Dimension(45, 45));
-        jLabel8.setPreferredSize(new java.awt.Dimension(45, 45));
         jLabel8.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel8MouseClicked(evt);
@@ -295,51 +298,6 @@ public class GUI2 extends javax.swing.JFrame {
 
     private void txtCodigoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoKeyPressed
         //Tomo el texto y determino el tamaño
-        String codigo = txtCodigo.getText();
-
-        if (codigo.length() == 13) {
-            sw = 1;
-            //Ahora tomo el codigo y consulto en la base de datos si el usuario esta en la base de datos
-            ControlDAO dao = new ControlDAO();
-            String event_id = String.valueOf(even_id);
-
-            //restar ultimo digito de la cadena
-            codigo = codigo.substring(0, codigo.length()-1);
-            String nombre = dao.obtenerPersona(codigo);
-
-            int resultado = dao.validarTarjeta(codigo, event_id);
-            lblLogo.setVisible(true);
-            switch (resultado) {
-                case 0:
-                    lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/good.png")));
-                    jLabel1.setForeground(new Color(44, 139, 25));
-                    jLabel1.setText("BIENVENIDO " + nombre);
-                    break;
-                case 1:
-                    lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bad.png")));
-                    jLabel1.setForeground(new Color(191, 61, 39));
-                    jLabel1.setText("CODIGO UTILIZADO");
-                    break;
-                case 2:
-                    lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/warning2.png")));
-                    jLabel1.setForeground(new Color(67, 67, 255));
-                    jLabel1.setText("HORARIO FUERA DE RANGO");
-                    break;
-                case 3:
-                    lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/warning1.png")));
-                    jLabel1.setForeground(new Color(234, 144, 1));
-                    jLabel1.setText("EVENTO NO VALIDO");
-                    break;
-                case 4:
-                    lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/warning1.png")));
-                    jLabel1.setForeground(new Color(234, 144, 1));
-                    jLabel1.setText("CODIGO NO VALIDO");
-                    break;
-            }
-            txtCodigo.setText(null);
-            txtCodigo.requestFocus();
-//            System.out.println("sw " + 1);
-        }
     }//GEN-LAST:event_txtCodigoKeyPressed
 
     private void txtCodigoPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_txtCodigoPropertyChange
@@ -397,6 +355,52 @@ public class GUI2 extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.setExtendedState(this.CROSSHAIR_CURSOR);
     }//GEN-LAST:event_jLabel8MouseClicked
+
+    private void txtCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoActionPerformed
+        // TODO add your handling code here:
+        String codigo = txtCodigo.getText();
+        sw = 1;
+        
+        //Ahora tomo el codigo y consulto en la base de datos si el usuario esta en la base de datos
+        ControlDAO dao = new ControlDAO();
+        String event_id = String.valueOf(even_id);
+
+        //restar ultimo digito de la cadena
+        codigo = codigo.substring(0,12);
+        String nombre = dao.obtenerPersona(codigo);
+
+        int resultado = dao.validarTarjeta(codigo, event_id);
+        lblLogo.setVisible(true);
+        switch (resultado) {
+            case 0:
+                lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/good.png")));
+                jLabel1.setForeground(new Color(44, 139, 25));
+                jLabel1.setText("BIENVENIDO " + nombre);
+                break;
+            case 1:
+                lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bad.png")));
+                jLabel1.setForeground(new Color(191, 61, 39));
+                jLabel1.setText("CODIGO UTILIZADO");
+                break;
+            case 2:
+                lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/warning2.png")));
+                jLabel1.setForeground(new Color(67, 67, 255));
+                jLabel1.setText("HORARIO FUERA DE RANGO");
+                break;
+            case 3:
+                lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/warning1.png")));
+                jLabel1.setForeground(new Color(234, 144, 1));
+                jLabel1.setText("EVENTO NO VALIDO");
+                break;
+            case 4:
+                lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/warning1.png")));
+                jLabel1.setForeground(new Color(234, 144, 1));
+                jLabel1.setText("CODIGO NO VALIDO");
+                break;
+        }
+        txtCodigo.setText(null);
+        txtCodigo.requestFocus();
+    }//GEN-LAST:event_txtCodigoActionPerformed
 
     /**
      * @param args the command line arguments

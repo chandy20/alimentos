@@ -180,6 +180,7 @@ public class ControlDAO {
     }
     
     public String obtenerPersona(String codigo){
+        System.out.println("cod " + codigo);
         String sql = "SELECT p.pers_primNombre FROM people p, inputs i WHERE i.entr_codigo = $1 AND i.person_id = p.id";
         sql = sql.replace("$1", codigo);
         try {
