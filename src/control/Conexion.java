@@ -15,17 +15,17 @@ public class Conexion {
 
     public static Connection getConnection() {
         try {
-//            String uname = "fabio";
-//            String pwd = "totem123";
-//            String servidor = "jdbc:mysql://192.168.10.1/tiquetes";
+            String uname = "fabio";
+            String pwd = "totem123";
+            String servidor = "jdbc:mysql://192.168.10.1/tiquetes";
                         
 //            String uname = "root";
 //            String pwd = "";
 //            String servidor = "jdbc:mysql://localhost/tiquetes";			
 
-            String uname = "u703774007_ch";
-            String pwd = "tko671029";
-            String servidor = "jdbc:mysql://mysql.hostinger.es/u703774007_tique";
+//            String uname = "u703774007_ch";
+//            String pwd = "tko671029";
+//            String servidor = "jdbc:mysql://mysql.hostinger.es/u703774007_tique";
                         
 //            String uname = "totemgco_tiquet";
 //            String pwd = "glEok_1dpVZ%";
