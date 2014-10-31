@@ -19,7 +19,7 @@ public class GUI2 extends javax.swing.JFrame {
     int even_id;
     ArrayList lisids = new ArrayList();
     ControlDAO control = new ControlDAO();
-    
+
     /**
      * Creates new form GUI2
      */
@@ -36,12 +36,12 @@ public class GUI2 extends javax.swing.JFrame {
     }
 
     private void createObjects() {
-        ArrayList eventos = (ArrayList)control.consultarEventos();
+        ArrayList eventos = (ArrayList) control.consultarEventos();
         if (eventos != null) {
-            for (int i = 1; i < eventos.size(); i = i+2) {
+            for (int i = 1; i < eventos.size(); i = i + 2) {
                 jComboBox1.addItem(eventos.get(i));
             }
-            for (int i = 0; i < eventos.size(); i=i+2) {
+            for (int i = 0; i < eventos.size(); i = i + 2) {
                 lisids.add(eventos.get(i));
             }
         } else {
@@ -324,8 +324,8 @@ public class GUI2 extends javax.swing.JFrame {
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         // TODO add your handling code here:
         if (lisids != null) {
-            even_id = (int)lisids.get(jComboBox1.getSelectedIndex());
-            jLabel4.setText((String)jComboBox1.getSelectedItem());
+            even_id = (int) lisids.get(jComboBox1.getSelectedIndex());
+            jLabel4.setText((String) jComboBox1.getSelectedItem());
             jLabel3.setVisible(false);
             jComboBox1.setVisible(false);
             jButton1.setVisible(false);
@@ -347,7 +347,7 @@ public class GUI2 extends javax.swing.JFrame {
         txtCodigo.setVisible(false);
         lblLogo.setVisible(false);
         jLabel4.setText("");
-        jLabel1.setForeground(new Color(0,0,153));
+        jLabel1.setForeground(new Color(0, 0, 153));
         jLabel1.setText("BIENVENIDO");
     }//GEN-LAST:event_jLabel6MouseClicked
 
@@ -360,43 +360,46 @@ public class GUI2 extends javax.swing.JFrame {
         // TODO add your handling code here:
         String codigo = txtCodigo.getText();
         sw = 1;
-        
+
         //Ahora tomo el codigo y consulto en la base de datos si el usuario esta en la base de datos
         ControlDAO dao = new ControlDAO();
         String event_id = String.valueOf(even_id);
 
         //restar ultimo digito de la cadena
-        codigo = codigo.substring(0,12);
-        String nombre = dao.obtenerPersona(codigo);
+        codigo = codigo.substring(0, 12);
+        String nombre = dao.obtenerPersona(codigo, String.valueOf(even_id));
 
         int resultado = dao.validarTarjeta(codigo, event_id);
         lblLogo.setVisible(true);
-        switch (resultado) {
-            case 0:
-                lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/good.png")));
-                jLabel1.setForeground(new Color(44, 139, 25));
-                jLabel1.setText("BIENVENIDO " + nombre);
-                break;
-            case 1:
-                lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bad.png")));
-                jLabel1.setForeground(new Color(191, 61, 39));
-                jLabel1.setText("CODIGO UTILIZADO");
-                break;
-            case 2:
-                lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/warning2.png")));
-                jLabel1.setForeground(new Color(67, 67, 255));
-                jLabel1.setText("HORARIO FUERA DE RANGO");
-                break;
-            case 3:
-                lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/warning1.png")));
-                jLabel1.setForeground(new Color(234, 144, 1));
-                jLabel1.setText("EVENTO NO VALIDO");
-                break;
-            case 4:
-                lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/warning1.png")));
-                jLabel1.setForeground(new Color(234, 144, 1));
-                jLabel1.setText("CODIGO NO VALIDO");
-                break;
+        if (resultado != -1) {
+            switch (resultado) {
+                case 0:
+                    lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/good.png")));
+                    jLabel1.setForeground(new Color(44, 139, 25));
+                    jLabel1.setText("BIENVENIDO " + nombre);
+                    break;
+                case 1:
+                    lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/bad.png")));
+                    jLabel1.setForeground(new Color(191, 61, 39));
+                    jLabel1.setText("CODIGO UTILIZADO");
+                    break;
+                case 2:
+                    lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/warning2.png")));
+                    jLabel1.setForeground(new Color(67, 67, 255));
+                    jLabel1.setText("HORARIO FUERA DE RANGO");
+                    break;
+                case 3:
+                    lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/warning1.png")));
+                    jLabel1.setForeground(new Color(234, 144, 1));
+                    jLabel1.setText("EVENTO NO VALIDO");
+                    break;
+                case 4:
+                    lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/warning1.png")));
+                    jLabel1.setForeground(new Color(234, 144, 1));
+                    jLabel1.setText("CODIGO NO VALIDO");
+                    break;
+            }
+        } else {
         }
         txtCodigo.setText(null);
         txtCodigo.requestFocus();

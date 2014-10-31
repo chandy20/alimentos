@@ -17,6 +17,8 @@ public class Conexion {
         try {
             String uname = "fabio";
             String pwd = "totem123";
+//            String uname = "fabio";
+//            String pwd = "totem123";
             String servidor = "jdbc:mysql://192.168.10.1/tiquetes";
                         
 //            String uname = "root";

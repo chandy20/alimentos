@@ -17,7 +17,7 @@ import java.util.Hashtable;
 public class ControlDAO {
 
     private Connection connection;
-    
+
     String inicioDesayuno = "06:00";
     String finDesayuno = "11:30";
     String inicioAlmuerzo = "12:00";
@@ -30,12 +30,14 @@ public class ControlDAO {
         connection = Conexion.getConnection();
     }
 
-    public ArrayList consultarEventos(){
+    public ArrayList consultarEventos() {
         ArrayList listado = new ArrayList();
-        Date date = new Date();
+        Date fecaActual = new Date();
+        SimpleDateFormat Formateador = new SimpleDateFormat("yyyy-MM-dd");
+        String Fecha = Formateador.format(fecaActual);
         try {
             Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT id, even_nombre FROM events WHERE even_fechInicio <= '" + date + "' AND even_fechFinal >= '" + date + "'");
+            ResultSet rs = statement.executeQuery("SELECT id, even_nombre FROM events WHERE even_fechInicio <= '" + Fecha + "' AND even_fechFinal >= '" + Fecha + "'");
             if (rs != null) {
                 while (rs.next()) {
                     //ahora tomo los datos de la consulta
@@ -51,10 +53,11 @@ public class ControlDAO {
         }
         return listado;
     }
-    
+
     /**
      * Esta funcion se encarga de dado el codigo de la tarjeta validar si se
      * puede ingresar
+     *
      * @param codigo
      * @param event_id
      * @return -4 Si la tarjeta no pertenece al evento \n -3 Si la tarjeta no se
@@ -74,7 +77,7 @@ public class ControlDAO {
                 if (rs.next()) {
                     //ahora tomo los datos de la consulta
                     datos.put("input_id", String.valueOf(rs.getInt("id")));
-                    
+
                     //Determino si esa categoria pertenece a ese evento
                     sql = "SELECT event_id FROM inputs WHERE id = " + datos.get("input_id");
                     rs.close();
@@ -89,11 +92,11 @@ public class ControlDAO {
                                     retornar = 2;
                                 } else if (resp == 2) {
                                     retornar = 1;
-                                    registrarLog(retornar,datos.get("input_id"),statement);
+                                    registrarLog(retornar, datos.get("input_id"), statement);
                                 } else if (resp == 3) {
                                     retornar = 0;
-                                    registrarLog(retornar,datos.get("input_id"),statement);
-                                } 
+                                    registrarLog(retornar, datos.get("input_id"), statement);
+                                }
                                 rs3.close();
                             } else {
                                 retornar = 3;
@@ -114,7 +117,7 @@ public class ControlDAO {
 //        System.out.println("Retornar: " + retornar);
         return retornar;
     }
-    
+
     public int consultarReclamados(String input_id) {
         int respuesta = -1;
         Date date = new Date();
@@ -124,15 +127,15 @@ public class ControlDAO {
         String fecha = formateador.format(date);
         String inicio;
         String fin;
-        if (Integer.parseInt(hora.replace(":","")) >= Integer.parseInt(inicioDesayuno.replace(":","")) && Integer.parseInt(hora.replace(":","")) <= Integer.parseInt(finDesayuno.replace(":",""))) {
+        if (Integer.parseInt(hora.replace(":", "")) >= Integer.parseInt(inicioDesayuno.replace(":", "")) && Integer.parseInt(hora.replace(":", "")) <= Integer.parseInt(finDesayuno.replace(":", ""))) {
             inicio = fecha + " " + inicioDesayuno;
             fin = fecha + " " + finDesayuno;
             consumible = "REFRIGERIO1";
-        } else if (Integer.parseInt(hora.replace(":","")) >= Integer.parseInt(inicioAlmuerzo.replace(":","")) && Integer.parseInt(hora.replace(":","")) <= Integer.parseInt(finAlmuerzo.replace(":",""))) {
+        } else if (Integer.parseInt(hora.replace(":", "")) >= Integer.parseInt(inicioAlmuerzo.replace(":", "")) && Integer.parseInt(hora.replace(":", "")) <= Integer.parseInt(finAlmuerzo.replace(":", ""))) {
             inicio = fecha + " " + inicioAlmuerzo;
             fin = fecha + " " + finAlmuerzo;
             consumible = "ALMUERZO";
-        } else if (Integer.parseInt(hora.replace(":","")) >= Integer.parseInt(inicioCena.replace(":","")) && Integer.parseInt(hora.replace(":","")) <= Integer.parseInt(finCena.replace(":",""))) {
+        } else if (Integer.parseInt(hora.replace(":", "")) >= Integer.parseInt(inicioCena.replace(":", "")) && Integer.parseInt(hora.replace(":", "")) <= Integer.parseInt(finCena.replace(":", ""))) {
             inicio = fecha + " " + inicioCena;
             fin = fecha + " " + finCena;
             consumible = "REFRIGERIO2";
@@ -155,48 +158,48 @@ public class ControlDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return respuesta;    
+        return respuesta;
     }
 
-    public void registrarLog(int tipo,String input_id,Statement statement)
-    {
-        String descripcion="";
-        switch(tipo)
-        {
+    public void registrarLog(int tipo, String input_id, Statement statement) {
+        String descripcion = "";
+        switch (tipo) {
             case 1:
-                descripcion="REINTENTO " + consumible;
+                descripcion = "REINTENTO " + consumible;
                 break;
             case 0:
                 descripcion = consumible;
                 break;
         }
-        String sql="INSERT INTO logs_consumibles(input_id,fecha,descripcion) VALUES ($1,NOW(),'$2')";
-        sql=sql.replace("$1", input_id);
-        sql=sql.replace("$2", descripcion);
+        String sql = "INSERT INTO logs_consumibles(input_id,fecha,descripcion) VALUES ($1,NOW(),'$2')";
+        sql = sql.replace("$1", input_id);
+        sql = sql.replace("$2", descripcion);
         try {
             statement.execute(sql);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-    
-    public String obtenerPersona(String codigo){
+
+    public String obtenerPersona(String codigo, String event_id) {
         System.out.println("cod " + codigo);
-        String sql = "SELECT p.pers_primNombre FROM people p, inputs i WHERE i.entr_codigo = $1 AND i.person_id = p.id";
+        String sql = "SELECT p.pers_primNombre FROM people p, inputs i WHERE i.entr_codigo = $1 AND i.event_id= $2 AND i.person_id = p.id";
         sql = sql.replace("$1", codigo);
+        sql = sql.replace("$2", event_id);
+        String nombre = "";
         try {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery(sql);
             if (rs.next()) {
-                String nombre = rs.getString("pers_primNombre");
+                nombre = rs.getString("pers_primNombre");
                 return nombre;
             } else {
-                return null;
+                return nombre;
             }
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
     }
-    
+
 }
